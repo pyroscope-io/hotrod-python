@@ -23,7 +23,9 @@ def after_request(response):
 @app.route('/customer')
 def get_customer():
     customer_id = request.args.get('id')
-    customer_obj = db.get_customer_by_id(customer_id)
+    mutex_delay = request.args.get('mutex_delay', 0)
+    customer_obj = db.get_customer_by_id(customer_id, float(mutex_delay))
+
     return jsonify(serializer.obj_to_json(customer_obj))
 
 def start_server(debug):

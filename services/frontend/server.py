@@ -33,7 +33,9 @@ def dispatch():
 
 def handle_dispatch(request):
     customer_id = request.args.get('customer')
-    return serializer.obj_to_json(eta.get_best_eta(customer_id))
+    mutex_delay = request.args.get('mutex_delay', 0)
+    print(f'/dispatch mutex_delay: {mutex_delay}')
+    return serializer.obj_to_json(eta.get_best_eta(customer_id, mutex_delay))
 
 def start_server(debug):
     app.run(host='0.0.0.0', port=config.FRONTEND_PORT, debug=debug)

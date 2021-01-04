@@ -1,5 +1,18 @@
 from .client import Customer
 import time 
+from services.maze.maze_manager import MazeManager
+from services.maze.maze import Maze
+
+def get_maze(width, height):
+    manager = MazeManager()
+    maze = manager.add_maze(width, height)
+
+    # manager.solve_maze(maze.id, "BreadthFirst")
+    # manager.solve_maze(maze.id, "BiDirectional")
+    # manager.solve_maze(maze.id, "DepthFirstBacktracker")
+    maze_image = manager.convert_maze_to_image(maze.id)
+
+    return True
 
 customers = {
     "123": Customer(id="123", name="Rachel's Floral Designs", location="115,277"),
@@ -19,4 +32,8 @@ def get_customer_by_id(customer_id, mutex_delay=0):
     return customers[customer_id]
 
 def mutex_lock_delay(delay):
-    time.sleep(delay)
+
+    if delay > 0:
+        get_maze(int(15 * delay), int(15 * delay))
+    # time.sleep(delay)
+

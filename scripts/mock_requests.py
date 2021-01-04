@@ -1,25 +1,44 @@
 import requests
 import time
+import threading
+from queue import Queue
+import multiprocessing
 
-
-def make_requests_every(time_between_requests, max_requests=100):
+def make_requests_every(time_between_requests, max_requests):
     i = 0
     while i < max_requests:
         if i < max_requests / 2:
-            resp = requests.get('http://localhost:8080/dispatch?customer=392&nonse=0.3238248658061229&mutex_delay=0')
+            resp_status = make_request(delay=1)
         else:
-            resp = requests.get('http://localhost:8080/dispatch?customer=392&nonse=0.3238248658061229&mutex_delay=2')
+            threads = []
+            # num_threads = max(10, multiprocessing.cpu_count() * 4)
+            num_threads = 2
 
-        print(f'making request #{i}...with response code #{resp.status_code}')
+            for j in range(num_threads):
+                t = threading.Thread(target=make_request, args=[2])
+                t.start()
+                threads.append(t)
+            
+            for thread in threads:
+                thread.join()
+
+            # for _ in range(10):
+            #     resp_status = make_request(delay=2)
         time.sleep(time_between_requests)
         i = i + 1
+        print(f'i: {i}/{max_requests}')
 
     print('done')
 
+
+def make_request(delay):
+    print(f'making request with delay {delay}')
+    resp = requests.get(f'https://python-hotrod.pyroscope.io/dispatch?customer=392&nonse=0.3238248658061229&mutex_delay={delay}')
+    return resp.status_code
 # Python program to use 
 # main for function call.
 if __name__ == "__main__":
-    make_requests_every(0.1, 1000)
+    make_requests_every(1, 500)
 
 
 

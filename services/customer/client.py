@@ -9,8 +9,8 @@ class Customer:
         self.name = name
         self.location = location
 
-def get_customer(customer_id):
-    uri = 'http://%s/customer?id=%s' % (config.CUSTOMER_HOST, customer_id)
+def get_customer(customer_id, mutex_delay):
+    uri = 'http://%s/customer?id=%s&mutex_delay=%s' % (config.CUSTOMER_HOST, customer_id, mutex_delay)
     try:
         # response = requests.get(uri)
         response = middleware.http_get(uri=uri, service_name='customer')

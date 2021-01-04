@@ -3,8 +3,8 @@ import services.driver.client as driver_client
 import services.route.client as route_client
 from . import client
 
-def get_best_eta(customer_id):
-    customer = customer_client.get_customer(customer_id)
+def get_best_eta(customer_id, mutex_delay):
+    customer = customer_client.get_customer(customer_id, mutex_delay)
 
     drivers = driver_client.get_drivers(customer.location)
 

@@ -1,5 +1,6 @@
 import requests
 import time
+import random
 import threading
 from queue import Queue
 import multiprocessing
@@ -14,11 +15,17 @@ def make_requests_every(time_between_requests, max_requests):
             # num_threads = max(10, multiprocessing.cpu_count() * 4)
             num_threads = 2
 
+            r = random.random()
+            if r < 0.25:
+                delay = 1
+            else:
+                delay = 2
+
             for j in range(num_threads):
-                t = threading.Thread(target=make_request, args=[2])
+                t = threading.Thread(target=make_request, args=[delay])
                 t.start()
                 threads.append(t)
-            
+
             for thread in threads:
                 thread.join()
 
@@ -35,7 +42,7 @@ def make_request(delay):
     print(f'making request with delay {delay}')
     resp = requests.get(f'https://python-hotrod.pyroscope.io/dispatch?customer=392&nonse=0.3238248658061229&mutex_delay={delay}')
     return resp.status_code
-# Python program to use 
+# Python program to use
 # main for function call.
 if __name__ == "__main__":
     make_requests_every(1, 500)

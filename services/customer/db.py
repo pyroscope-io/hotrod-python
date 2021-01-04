@@ -1,5 +1,5 @@
 from .client import Customer
-import time 
+import time
 from services.maze.maze_manager import MazeManager
 from services.maze.maze import Maze
 
@@ -26,14 +26,21 @@ def get_customer_by_id(customer_id, mutex_delay=0):
 
     if mutex_delay > 0:
         mutex_lock_delay(mutex_delay)
-    
+
     print(f'mutex delay: #{mutex_delay}')
 
     return customers[customer_id]
 
-def mutex_lock_delay(delay):
+def foo(weight):
+    get_maze(weight, weight)
 
+def bar(weight):
+    get_maze(weight, weight)
+
+def mutex_lock_delay(delay):
     if delay > 0:
-        get_maze(int(15 * delay), int(15 * delay))
-    # time.sleep(delay)
+        if delay == 1:
+            foo(10)
+        elif delay == 2:
+            bar(10)
 

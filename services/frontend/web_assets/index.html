@@ -81,7 +81,9 @@ $(".hotrod-button").click(function(evt) {
       var after = Date.now();
       console.log(data);
       var duration = formatDuration(data.eta);
-      freshCar.html('HotROD <b>' + data.driver_id + '</b> arriving in ' + duration + ' [req: ' + requestID + ', latency: ' + (after-before) + 'ms]');
+      var pyroscopeLogo = `<img src="https://pyroscope-other.s3.amazonaws.com/demo_addons/logo-one-color.png" alt="Pyroscope" width="20" height="20">&nbsp;`
+      var pyroscopeLink = `<a style="text-decoration:underline;" href="https://demo.pyroscope.io/?name=hotrod.python.frontend%7B%7D">${pyroscopeLogo}View Profile</a>`
+      freshCar.html('HotROD <b>' + data.driver_id + '</b> arriving in ' + duration + ' [req: ' + requestID + ', latency: ' + (after-before) + 'ms] ' + pyroscopeLink);
     },
   });
 });

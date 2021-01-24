@@ -45,7 +45,22 @@
             </div>
         </div>
         <div id="tip">Click on customer name above to order a car.</div>
-        <div id="hotrod-log" class="lead"></div>
+        <div id="hotrod-log" class="lead">
+          <table id="hotrod-table">
+            <tr class="hotrod-header-row">
+              <th>License</th>
+              <th>Arriving In</th>
+              <th>Latency</th>
+              <th>Profile</th>
+            </tr>
+            <tr>
+              <td>EF34CK49</td>
+              <td>2 minutes</td>
+              <td>1.849 ms</td>
+              <td>[Profile]</td>
+            </tr>
+        </table>
+        </div>
       </center>
     </div>
   </body>
@@ -67,7 +82,20 @@ $(".uuid").html("Your web client's id: <strong>" + clientUUID + "</strong>");
 $(".hotrod-button").click(function(evt) {
   lastRequestID++;
   var requestID = clientUUID + "-" + lastRequestID;
-  var freshCar = $($("#hotrod-log").prepend('<div class="fresh-car"><em>Dispatching a car...[req: '+requestID+']</em></div>').children()[0]);
+  var placeHolderRow = `
+    <tr>
+      <td>EF34CK49</td>
+      <td>2 minutes</td>
+      <td>1.849 ms</td>
+      <td>[Profile]</td>
+    </tr>
+  `
+
+  // var freshCar = $($("#hotrod-table").prepend('<div class="fresh-car"><em>Dispatching a car...[req: '+requestID+']</em></div>').children()[0]);
+
+  var hotRodTable = $("#hotrod-table tbody")
+  var freshCar = $(hotRodTable.append(placeHolderRow).children()[hotRodTable.children().length - 1]);
+  console.log('freshcar: ', freshCar);
   var customer = evt.target.dataset.customer;
   headers = {
       'jaeger-baggage': 'session=' + clientUUID + ', request=' + requestID
@@ -80,8 +108,18 @@ $(".hotrod-button").click(function(evt) {
     success: function(data, textStatus) {
       var after = Date.now();
       console.log(data);
+      console.log('updint...gg')
       var duration = formatDuration(data.eta);
-      freshCar.html('HotROD <b>' + data.driver_id + '</b> arriving in ' + duration + ' [req: ' + requestID + ', latency: ' + (after-before) + 'ms]');
+      var pyroscopeLogo = `<img src="https://pyroscope-other.s3.amazonaws.com/demo_addons/logo-one-color.png" alt="Pyroscope" width="20" height="20">&nbsp;`
+      var pyroscopeLink = `<a style="text-decoration:underline;" href="https://demo.pyroscope.io/?name=hotrod.python.frontend%7B%7D">${pyroscopeLogo}View Profile</a>`
+      // freshCar.html('HotROD <b>' + data.driver_id + '</b> arriving in ' + duration + ' [req: ' + requestID + ', latency: ' + (after-before) + 'ms] ' + pyroscopeLink);
+      var tableRow = `
+        <td>${data.driver_id}</td>
+        <td>${duration}</td>
+        <td>${(after-before)} ms</td>
+        <td>${pyroscopeLink}</td>
+      `
+      freshCar.html(tableRow)
     },
   });
 });

@@ -13,6 +13,45 @@
 .hotrod-button:hover { cursor: pointer; filter: brightness(85%); }
 #hotrod-log { margin-top: 15px; }
 #tip { margin-top: 15px; }
+.lead { width: 40%; }
+.hotrod-container { display: flex; }
+.noteContainer { width: 30%}
+.note {
+  width: 80%;
+  height: 100px;
+  margin: 10px;
+  border-left: 5px solid #ff9919;
+  padding-left: 15px;
+  display: table;
+}
+
+.noteText {
+  font-size: 16px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.gifImage {
+  display: block;
+  max-width:862px;
+  max-height:556px;
+  width: 500px;
+  height: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th, td {
+  padding: 0.25rem;
+  text-align: left;
+  border: 1px solid #ccc;
+}
+tbody tr:nth-child(odd) {
+  background: #eee;
+}
     </style>
 
   </head>
@@ -26,40 +65,54 @@
             <div class="col-md-3 col-sm-6">
                 <span
                     class="btn btn-info btn-block hotrod-button"
-                    data-customer="123">Rachel's Floral Designs</span>
+                    data-customer="123">Bar</span>
             </div>
             <div class="col-md-3 col-sm-6">
                 <span
                     class="btn btn-info btn-block hotrod-button"
-                    data-customer="392">Trom Chocolatier</span>
+                    data-customer="392">Gym</span>
             </div>
             <div class="col-md-3 col-sm-6">
                 <span
                     class="btn btn-info btn-block hotrod-button"
-                    data-customer="731">Japanese Desserts</span>
+                    data-customer="731">Home</span>
             </div>
             <div class="col-md-3 col-sm-6">
                 <span
                     class="btn btn-info btn-block hotrod-button"
-                    data-customer="567">Amazing Coffee Roasters</span>
+                    data-customer="567">Office</span>
             </div>
         </div>
-        <div id="tip">Click on customer name above to order a car.</div>
-        <div id="hotrod-log" class="lead">
-          <table id="hotrod-table">
-            <tr class="hotrod-header-row">
-              <th>License</th>
-              <th>Arriving In</th>
-              <th>Latency</th>
-              <th>Profile</th>
-            </tr>
-            <tr>
-              <td>EF34CK49</td>
-              <td>2 minutes</td>
-              <td>1.849 ms</td>
-              <td>[Profile]</td>
-            </tr>
-        </table>
+        <!-- <div id="tip">Click on customer name above to order a car.</div> -->
+        <div class="hotrod-container">
+                  <div class='gifContainer'>
+                    <img src="https://pyroscope-other.s3.amazonaws.com/demo_addons/hotrod_demo_mockup_02_2.gif" alt="Pyroscope" class="gifImage">
+                  </div>
+                  <div class='noteContainer'>
+                    <div class='note'>
+                      <span class='noteText'>Client sends requests for cars. <strong><u>Click blue buttons</u></strong></span>
+                    </div>
+                    <div class='note'>
+                      <span class='noteText'><strong>Servers execute functions to process requests</strong></span>
+                    </div>
+                    <div class='note'>
+                      <span class='noteText'><strong>Pyroscope records functions' performance</strong> and builds flame graphs</span>
+                    </div>
+                    <div class='note'>
+                      <span class='noteText'>Click <strong>'View Profile'</strong> to see which functions consumed the most CPU</span>
+                    </div>
+                  </div>
+                  <div id="hotrod-log" class="lead">
+                    <table id="hotrod-table">
+                      <tr class="hotrod-header-row">
+                        <th>License</th>
+                        <th>To</th>
+                        <th>ETA</th>
+                        <th>Latency</th>
+                        <th>Profile</th>
+                      </tr>
+                    </table>
+                  </div>
         </div>
       </center>
     </div>
@@ -80,6 +133,21 @@ var lastRequestID = 0;
 $(".uuid").html("Your web client's id: <strong>" + clientUUID + "</strong>");
 
 $(".hotrod-button").click(function(evt) {
+  console.log(evt);
+  console.dir(evt);
+  console.log(evt.originalEvent.srcElement.attributes[1].value);
+  console.log('cat');
+
+  idToName = {
+    '123': 'Bar',
+    '392': 'Gym',
+    '731': 'Home',
+    '567': 'Office',
+  }
+
+  var id = evt.originalEvent.srcElement.attributes[1].value
+  var destination = idToName[id]
+
   lastRequestID++;
   var requestID = clientUUID + "-" + lastRequestID;
   var placeHolderRow = `
@@ -115,6 +183,7 @@ $(".hotrod-button").click(function(evt) {
       // freshCar.html('HotROD <b>' + data.driver_id + '</b> arriving in ' + duration + ' [req: ' + requestID + ', latency: ' + (after-before) + 'ms] ' + pyroscopeLink);
       var tableRow = `
         <td>${data.driver_id}</td>
+        <td>${destination}</td>
         <td>${duration}</td>
         <td>${(after-before)} ms</td>
         <td>${pyroscopeLink}</td>

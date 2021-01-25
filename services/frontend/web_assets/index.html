@@ -159,12 +159,13 @@ $(".hotrod-button").click(function(evt) {
 
   var hotRodTable = $("#hotrod-table tbody")
   var freshCar = $(hotRodTable.append(placeHolderRow).children()[hotRodTable.children().length - 1]);
-  console.log('freshcar: ', freshCar);
+
   var customer = evt.target.dataset.customer;
   headers = {
       'jaeger-baggage': 'session=' + clientUUID + ', request=' + requestID
   };
   console.log(headers);
+
   var before = Date.now();
   $.ajax('/dispatch?customer=' + customer + '&nonse=' + Math.random(), {
     headers: headers,
@@ -172,7 +173,6 @@ $(".hotrod-button").click(function(evt) {
     success: function(data, textStatus) {
       var after = Date.now();
       console.log(data);
-      console.log('updint...gg')
       var duration = formatDuration(data.eta);
       var pyroscopeLogo = `<img src="https://pyroscope-other.s3.amazonaws.com/demo_addons/logo-one-color.png" alt="Pyroscope" width="20" height="20">&nbsp;`
       var pyroscopeLink = `<a style="text-decoration:underline;" href="https://demo.pyroscope.io/?name=hotrod.python.frontend%7B%7D">${pyroscopeLogo}View Profile</a>`

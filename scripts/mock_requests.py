@@ -45,7 +45,7 @@ def make_request(name, delay):
 # main for function call.
 if __name__ == "__main__":
     name = sys.argv[1]
-    threads = sys.argv[2]
+    threads = int(sys.argv[2])
     while True:
         make_requests_every(name, 1, 100, threads)
 
